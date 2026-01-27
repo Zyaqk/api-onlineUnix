@@ -3,5 +3,8 @@
     "express": "^5.2.1",
     "minecraft-server-util": "^5.4.4",
     "nodemon": "^3.1.11"
+  },
+  "scripts": {
+    "start": "nodemon server.mjs"
   }
 }

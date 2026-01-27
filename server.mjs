@@ -1,10 +1,14 @@
 import express from "express"
 import dotenv from "dotenv";
-dotenv.config()
 import { status } from "minecraft-server-util"
+import cors from "cors"
+
+dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 3000;
+
+app.use(cors())
 
 const HOSTS = {
   lobby:  "mc.teslacraft.org",

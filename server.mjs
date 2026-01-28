@@ -17,8 +17,8 @@ const DATA_FILE = path.resolve("./online-history.json")
 const HOSTS = {
   lobby:  "mc.teslacraft.org",
   royale: "hub.holyworld.ru",
-  uhc:    "astrummc.su",
-  meetup: "mc.politmine.ru",
+  uhc:    "mc.reallyworld.ru",
+  meetup: "astrummc.su",
 }
 
 const UPDATE_INTERVAL = 30_000

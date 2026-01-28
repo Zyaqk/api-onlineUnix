@@ -1,14 +1,18 @@
 import express from "express"
-import dotenv from "dotenv";
+import dotenv from "dotenv"
 import { status } from "minecraft-server-util"
 import cors from "cors"
+import fs from "fs"
+import path from "path"
 
 dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000
 
 app.use(cors())
+
+const DATA_FILE = path.resolve("./online-history.json")
 
 const HOSTS = {
   lobby:  "mc.teslacraft.org",
@@ -44,6 +48,21 @@ let lastValidOnline = {
 let chartCache = {
   data: [],
   updated: 0
+}
+
+if (fs.existsSync(DATA_FILE)) {
+  try {
+    const saved = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"))
+    history = saved.history || []
+    lastValidOnline = saved.lastValidOnline || lastValidOnline
+  } catch {}
+}
+
+function saveToFile() {
+  fs.writeFileSync(DATA_FILE, JSON.stringify({
+    history,
+    lastValidOnline
+  }))
 }
 
 async function getOnline(host) {
@@ -106,12 +125,13 @@ async function updateOnline() {
 
     history.push({
       time: cache.updated,
-      total: cache.total,
-      servers: { ...cache }
+      total: cache.total
     })
 
     const cutoff = Date.now() - KEEP_TIME
     history = history.filter(p => p.time >= cutoff)
+
+    saveToFile()
 
   } finally {
     updating = false
@@ -151,5 +171,5 @@ app.get("/online/chart", (req, res) => {
 })
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
